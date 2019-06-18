@@ -13,7 +13,11 @@ struct Node
 	int _IndexY;
 
 	Node* _Prev;
+	
 	int _GScore;
+	int _FScore;
+	int _HScore;
+
 	Node* _Neighbours[NEIGHBOUR_COUNT]; 
 	int _Costs[NEIGHBOUR_COUNT]; 
  	bool _Blocked; 

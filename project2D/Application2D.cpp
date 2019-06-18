@@ -14,7 +14,7 @@ Application2D::~Application2D() {
 
 bool Application2D::startup() {
 
-	_Grid = new Grid(60 ,40 ,getWindowWidth() ,getWindowHeight());
+	_Grid = new Grid(20 ,20 ,getWindowWidth() ,getWindowHeight());
 
 	_2dRenderer = new aie::Renderer2D();
 
@@ -63,14 +63,14 @@ void Application2D::update(float deltaTime) {
 	if (input->wasKeyPressed(aie::INPUT_KEY_S))
 	{
 		_StartPos = MousePos;
-		_Grid->FindPath(_StartPos, _EndPos, _Path);
 	}
 
 	if (input->wasKeyPressed(aie::INPUT_KEY_E))
 	{
-		_EndPos = MousePos;
-		_Grid->FindPath(_StartPos, _EndPos, _Path);
+		_EndPos = MousePos; 
 	}
+
+	
 	_Grid->FindPath(_StartPos, _EndPos, _Path);
 	
 

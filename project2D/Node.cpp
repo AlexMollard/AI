@@ -8,6 +8,8 @@ Node::Node(Vector2 Pos, int IndexX, int IndexY)
 
 	_Prev = nullptr; 
 	_GScore = 0;
+	_FScore = 0;
+	_HScore = 0;
 	_Blocked = false; 
 
 	for (int i = 0; i < NEIGHBOUR_COUNT; i++)

@@ -18,6 +18,8 @@ public:
 
 	Node* GetNodeByPos(Vector2 Pos);
 	bool FindPath(Vector2 Start, Vector2 End, std::vector<Vector2>& path);
+
+	int CalculateHeuristic(Node* node, Node* _End);
 private:
 	bool _ToggleLines;
 
