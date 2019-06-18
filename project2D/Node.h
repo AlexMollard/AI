@@ -1,7 +1,7 @@
 #pragma once
 #include "Vector2.h"
 
-#define NEIGHBOUR_COUNT 4
+#define NEIGHBOUR_COUNT 8
 
 struct Node
 {

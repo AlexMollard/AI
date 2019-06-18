@@ -3,8 +3,8 @@
 Node::Node(Vector2 Pos, int IndexX, int IndexY)
 {
 	_Position = Pos;
-	_IndexX - IndexX;
-	_IndexY = _IndexY; 
+	_IndexX = IndexX;
+	_IndexY = IndexY;
 
 	_Prev = nullptr; 
 	_GScore = 0;

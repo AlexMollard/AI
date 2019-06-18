@@ -1,4 +1,5 @@
-﻿c:\users\s191067\desktop\ai\project2d\node.h(7): warning C4099: 'Node': type name first seen using 'class' now seen using 'struct'
-c:\users\s191067\desktop\ai\project2d\application2d.cpp(45): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\s191067\desktop\ai\project2d\application2d.cpp(46): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\s191067\desktop\ai\project2d\application2d.cpp(103): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+﻿c:\users\s191067\desktop\ai\project2d\grid.h(8): warning C4099: 'Node': type name first seen using 'struct' now seen using 'class'
+c:\users\s191067\desktop\ai\project2d\grid.cpp(30): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\s191067\desktop\ai\project2d\grid.cpp(31): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\s191067\desktop\ai\project2d\grid.cpp(177): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+c:\users\s191067\desktop\ai\project2d\grid.cpp(178): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data

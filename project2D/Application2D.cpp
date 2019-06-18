@@ -13,7 +13,8 @@ Application2D::~Application2D() {
 }
 
 bool Application2D::startup() {
-	_Grid = new Grid(76 ,40);
+
+	_Grid = new Grid(60 ,40 ,getWindowWidth() ,getWindowHeight());
 
 	_2dRenderer = new aie::Renderer2D();
 
@@ -62,14 +63,16 @@ void Application2D::update(float deltaTime) {
 	if (input->wasKeyPressed(aie::INPUT_KEY_S))
 	{
 		_StartPos = MousePos;
+		_Grid->FindPath(_StartPos, _EndPos, _Path);
 	}
 
 	if (input->wasKeyPressed(aie::INPUT_KEY_E))
 	{
 		_EndPos = MousePos;
+		_Grid->FindPath(_StartPos, _EndPos, _Path);
 	}
-
 	_Grid->FindPath(_StartPos, _EndPos, _Path);
+	
 
 	// exit the application
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
@@ -86,13 +89,21 @@ void Application2D::draw() {
 
 	_Grid->Draw(_2dRenderer);
 
-	_2dRenderer->setRenderColour(1, 1, 1);
-	_2dRenderer->drawCircle(_StartPos.x, _StartPos.y, 20);
-	_2dRenderer->drawCircle(_EndPos.x, _EndPos.y, 20);
+	//Draw Path
+	_2dRenderer->setRenderColour(1.0f, 1.0f, 0.0f);
 	for (int i = 1; i < _Path.size(); i++)
 	{
-		_2dRenderer->drawLine(_Path[i].x, _Path[i].y, _Path[i + 1].x, _Path[i + 1].y, 5);
+		_2dRenderer->drawLine(_Path[i-1].x, _Path[i-1].y, _Path[i].x, _Path[i].y, 3);
 	}
+
+	//Start point
+	_2dRenderer->setRenderColour(0.2f, 0.7f, 0.0f);
+	_2dRenderer->drawCircle(_StartPos.x, _StartPos.y, 10);
+
+	//End point
+	_2dRenderer->setRenderColour(0.7f, 0.0f, 0.2f);
+	_2dRenderer->drawCircle(_EndPos.x, _EndPos.y, 10);
+
 
 	_2dRenderer->setRenderColour(0, 1, 0);
 	//_2dRenderer->drawBox(getWindowWidth() / 2 + (tan(m_timer) * 100), getWindowHeight() / 2, 100, 100);

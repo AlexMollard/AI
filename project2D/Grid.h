@@ -2,13 +2,15 @@
 #include "Renderer2D.h"
 #include "Vector2.h"
 #include "Input.h"
+#include "PathHeap.h"
+#include <vector>
 
 class Node;
 
 class Grid
 {
 public:
-	Grid(int Width, int Height);
+	Grid(int Width, int Height, int screenWidth, int screenHeight);
 	~Grid();
 
 	void Draw(aie::Renderer2D* Renderer);
@@ -16,13 +18,12 @@ public:
 
 	Node* GetNodeByPos(Vector2 Pos);
 	bool FindPath(Vector2 Start, Vector2 End, std::vector<Vector2>& path);
-	void SortOpenList();
 private:
 	bool _ToggleLines;
 
 	Node*** _NodeList;
 	
-	std::vector<Node*> _OpenList;
+	PathHeap _OpenList;
 	bool* _ClosedList;
 	
 	int _Width;

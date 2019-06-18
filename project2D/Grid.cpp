@@ -4,12 +4,13 @@
 #include <math.h>
 #include <iostream>
 #include <algorithm>
+#include <random>
 
 #define SQUARE_SIZE 25
 #define GRID_POSX 10
 #define GRID_POSY 10
 
-Grid::Grid(int Width, int Height)
+Grid::Grid(int Width, int Height, int screenWidth, int screenHeight)
 {
 	_Width = Width; 
 	_Height = Height; 
@@ -37,21 +38,40 @@ Grid::Grid(int Width, int Height)
 		for (int y = 0; y < _Height; ++y)
 		{
 			if (y > 0)
-				_NodeList[x][y]->_Neighbours[0] = _NodeList[x][y - 1];
+				_NodeList[x][y]->_Neighbours[0] = _NodeList[x][y - 1];	//Down
 
 			if (x > 0)
-				_NodeList[x][y]->_Neighbours[1] = _NodeList[x - 1][y];
+				_NodeList[x][y]->_Neighbours[1] = _NodeList[x - 1][y];	//Left
 
 			if (y < _Height - 1)
-				_NodeList[x][y]->_Neighbours[2] = _NodeList[x][y + 1];
+				_NodeList[x][y]->_Neighbours[2] = _NodeList[x][y + 1];	//Up
 
 			if (x < _Width - 1)
-				_NodeList[x][y]->_Neighbours[3] = _NodeList[x + 1][y];
+				_NodeList[x][y]->_Neighbours[3] = _NodeList[x + 1][y];	//Right
 
+			if (x < _Width - 1 && y < _Height - 1)
+				_NodeList[x][y]->_Neighbours[4] = _NodeList[x + 1][y + 1];	//Right Up
+
+			if (x < _Width - 1 && y > 0)
+				_NodeList[x][y]->_Neighbours[5] = _NodeList[x + 1][y - 1];	//Right down
+
+			if (x > 0 && y > 0)
+				_NodeList[x][y]->_Neighbours[6] = _NodeList[x - 1][y - 1];	//Left down
+
+			if (x > 0 && y < _Height - 1)
+				_NodeList[x][y]->_Neighbours[7] = _NodeList[x - 1][y + 1];	//Left Up
+
+			// Adjacent
 			_NodeList[x][y]->_Costs[0] = 10;
 			_NodeList[x][y]->_Costs[1] = 10;
 			_NodeList[x][y]->_Costs[2] = 10;
-			_NodeList[x][y]->_Costs[3] = 10;
+			_NodeList[x][y]->_Costs[3] = 10;	
+
+			// Diagonal
+			_NodeList[x][y]->_Costs[4] = 11;
+			_NodeList[x][y]->_Costs[5] = 11;
+			_NodeList[x][y]->_Costs[6] = 11;
+			_NodeList[x][y]->_Costs[7] = 11;
 		}
 	}
 
@@ -103,7 +123,7 @@ void Grid::Draw(aie::Renderer2D* pRenderer)
 					{
 						Vector2 NeighbourPos = _NodeList[x][y]->_Neighbours[n]->_Position;
 						pRenderer->setRenderColour(0.3f, 0.0f, 0.3f);
-						pRenderer->drawLine(v2Pos.x, v2Pos.y, NeighbourPos.x, NeighbourPos.y, 4.5f);
+						pRenderer->drawLine(v2Pos.x, v2Pos.y, NeighbourPos.x, NeighbourPos.y, 2.5f);
 					}
 				}
 			}
@@ -133,6 +153,23 @@ void Grid::update(float deltaTime, aie::Input* input)
 			}
 		}
 	}
+
+	//if (input->wasKeyPressed(aie::INPUT_KEY_))
+	//{
+	//	int test = 0;
+	//	for (int x = 0; x < _Width; x++)
+	//	{
+	//		for (int y = 0; y < _Height; y++)
+	//		{
+	//			test = rand() % 10;
+	//
+	//			if (test < 4)
+	//				_NodeList[x][y]->_Blocked = true;
+	//			else
+	//				_NodeList[x][y]->_Blocked = false;
+	//		}
+	//	}
+	//}
 }
 
 Node* Grid::GetNodeByPos(Vector2 Pos)
@@ -145,22 +182,22 @@ Node* Grid::GetNodeByPos(Vector2 Pos)
 
 	return _NodeList[x][y];
 }
-
-void Grid::SortOpenList()
-{
-	for (int i = 0; i < _OpenList.size() - 1; ++i)
-	{
-		for (int j = 0; j < _OpenList.size() - 1 - i; ++j)
-		{
-			if (_OpenList[j]->_GScore < _OpenList[j + 1]->_GScore)
-			{
-				Node* _Swap = _OpenList[j];
-				_OpenList[j] = _OpenList[j + 1];
-				_OpenList[j + 1] = _Swap;
-			}
-		}
-	}
-}
+//
+//void Grid::SortOpenList()
+//{
+//	for (int i = 0; i < _OpenList.size() - 1; ++i)
+//	{
+//		for (int j = 0; j < _OpenList.size() - 1 - i; ++j)
+//		{
+//			if (_OpenList[j]->_GScore < _OpenList[j + 1]->_GScore)
+//			{
+//				Node* _Swap = _OpenList[j];
+//				_OpenList[j] = _OpenList[j + 1];
+//				_OpenList[j + 1] = _Swap;
+//			}
+//		}
+//	}
+//}
 
 bool Grid::FindPath(Vector2 Start, Vector2 End, std::vector<Vector2>& path)
 {
@@ -168,29 +205,30 @@ bool Grid::FindPath(Vector2 Start, Vector2 End, std::vector<Vector2>& path)
 	Node* _StartNode = GetNodeByPos(Start);
 	Node* _EndNode = GetNodeByPos(End);
 
-	if (!_StartNode||!_EndNode)
+	if (!_StartNode || !_EndNode)
 		return false;
 	
 	if (_StartNode == _EndNode)
 		return false;
 
+	if (_StartNode->_Blocked || _EndNode->_Blocked)
+		return false;
+
 	// Make the thingos equal other thingos
 	path.clear();
-	_OpenList.clear();
+	_OpenList.Clear();
 	memset(_ClosedList, 0, sizeof(bool) * _Width *_Height);
 	bool _FoundPath = false;
+
 	_StartNode->_Prev = nullptr;
 	_StartNode->_GScore = 0;
-	_OpenList.push_back(_StartNode);
+	_OpenList.Push(_StartNode);
 
 	// Algo Boi
-	while (_OpenList.size() > 0)
+	while (_OpenList.GetCount() > 0)
 	{
-		// Sort out the bois
-		SortOpenList();
-
-		Node* _Current = _OpenList[_OpenList.size() - 1];
-		_OpenList.pop_back();
+		// Kill one of the bois
+		Node* _Current = _OpenList.Pop();
 
 		// Add to my Boi
 		int _Index = _Current->_IndexY * _Width + _Current->_IndexX;
@@ -217,12 +255,11 @@ bool Grid::FindPath(Vector2 Start, Vector2 End, std::vector<Vector2>& path)
 			if (_ClosedList[_NeighbourIndex])
 				continue;
 
-			if (std::find(_OpenList.begin(), _OpenList.end(), _Neighbour) == _OpenList.end())
+			if (!_OpenList.Find(_Neighbour))
 			{
-
 				_Neighbour->_Prev = _Current;
 				_Neighbour->_GScore = _Current->_GScore + _Current->_Costs[i];
-				_OpenList.push_back(_Neighbour);
+				_OpenList.Push(_Neighbour);
 			}
 			else
 			{
@@ -245,6 +282,7 @@ bool Grid::FindPath(Vector2 Start, Vector2 End, std::vector<Vector2>& path)
 		while (_Current)
 		{
 			path.insert(path.begin(), _Current->_Position);
+			_Current = _Current->_Prev;
 		}
 		return true;
 	}
