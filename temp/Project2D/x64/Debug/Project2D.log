@@ -1,0 +1,4 @@
+﻿c:\users\s191067\desktop\ai\project2d\node.h(7): warning C4099: 'Node': type name first seen using 'class' now seen using 'struct'
+c:\users\s191067\desktop\ai\project2d\application2d.cpp(45): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\s191067\desktop\ai\project2d\application2d.cpp(46): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\s191067\desktop\ai\project2d\application2d.cpp(103): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
